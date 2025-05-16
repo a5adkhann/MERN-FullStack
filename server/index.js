@@ -95,11 +95,11 @@ app.post("/signin", async(request, response) => {
                 response.status(200).send({message: "Login Successfully", registeredUser});
             }
             else {
-                response.status(404).send({message: "Invalid Credentials"});
+                response.status(200).send({message: "Invalid Credentials"});
             }
         }
         else {
-            response.status(404).send({message: "Account does not exist for this email"});
+            response.status(200).send({message: "Account does not exist for this email"});
         }
 })
 

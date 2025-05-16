@@ -9,22 +9,28 @@ import Signup from './pages/Signup'
 
 const App = () => {
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
-  console.log(user)
+  const [user,setUser] = useState(JSON.parse(localStorage.getItem('user'))|| '')
 
-  useEffect(() => {
-    let users = JSON.parse(localStorage.getItem('user'))
-    setUser(users);
-  }, [user])
+
+  const LoginUser =(data)=>{
+    localStorage.setItem('user',JSON.stringify(data))
+    setUser(data)
+  }
+
+  const LogoutUser = ()=>{
+    localStorage.removeItem('user')
+    setUser('')
+  }
+
 
   return (
     <>
       <BrowserRouter>
-        <Navbar setUser={setUser}/>
+        <Navbar LogoutUser={LogoutUser}/>
         <Routes>
-          <Route path="/" element={user ? <UserData setUser={setUser}/> : <Navigate to="/signin" />}></Route>
-          <Route path="/adduser" element={<UserForm setUser={setUser}/>}></Route>
-          <Route path="/signin" element={<Signin  />}></Route>
+          <Route path="/" element={user?<UserData/>:<Navigate to='/signin'/>}></Route>
+          <Route path="/adduser" element={user?<UserForm/>:<Navigate to='/signin'/>}></Route>
+          <Route path="/signin" element={<Signin  LoginUser={LoginUser}/>}></Route>
           <Route path="/signup" element={<Signup />}></Route>
         </Routes>
         <Footer />

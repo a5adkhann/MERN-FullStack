@@ -1,16 +1,8 @@
 import React from 'react'
 import toast from 'react-hot-toast';
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-const Navbar = ({setUser}) => {
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        localStorage.removeItem("user");
-        toast.success("Logged Out Successdully");
-        setUser(localStorage.setItem('user'));
-        navigate("/signin");
-    }
+const Navbar = ({LogoutUser}) => {
     return (
         <>
             <div className="navbar bg-base-100 shadow-sm">
@@ -51,10 +43,7 @@ const Navbar = ({setUser}) => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <a className="btn">Button</a>
-                </div>
-                <div className="navbar-end">
-                    <a className="btn btn-error" onClick={handleLogout}>Logout</a>
+                    <button onClick={LogoutUser} className="btn">Logout</button>
                 </div>
             </div>
         </>

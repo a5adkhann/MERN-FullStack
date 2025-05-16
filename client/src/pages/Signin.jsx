@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-const Signin = () => {
+const Signin = ({LoginUser}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -14,11 +14,10 @@ const Signin = () => {
             const response = await axios.post("http://localhost:2000/signin", { email, password });
             toast.success(response.data.message);
             console.log(response);
-            localStorage.setItem('user',JSON.stringify(response.data.registeredUser))
-            setUser(response.data.registeredUser);
-            navigate("/");
+            LoginUser(response.data.registeredUser);
             setEmail("");
             setPassword("");    
+            navigate("/")
         }
         catch (err) {
             toast.error(err);

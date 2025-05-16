@@ -25,6 +25,7 @@ const UserData = ({refresh, setRefresh}) => {
   try {
     const response = await axios.get("http://localhost:2000/getusers");
     console.log(response.data.users);
+    setUserData(response.data.users)
   }
   catch (err) {
     console.log(err);
