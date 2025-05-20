@@ -2,14 +2,32 @@ const express = require("express");
 const connectDB = require("./db/db_connection");
 const User = require("./models/userModel");
 const Registeration = require("./models/registerationModel");
+const MediaContent = require("./models/mediaContentModel");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+const path = require('path')
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 
 connectDB();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({ storage: storage })
 
 app.post("/adduser", async (request, response) => {
     const {name, email} = request.body;
@@ -103,6 +121,28 @@ app.post("/signin", async(request, response) => {
         }
 })
 
+app.post("/media-upload", upload.single("file"),  async(request, response) => {
+    const {filename} = request.file;
+     console.log(filename)
+    try {
+        await MediaContent.insertOne({Image: filename});
+        response.status(200).send({message: "File Uploaded Successfully"});
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
+
+app.get("/get-files", async(request, response) => {
+    try {
+        const files = await MediaContent.find();
+        response.status(200).send(files);
+    }
+    catch(err){
+        console.log(err);
+    }
+})
 
 app.listen(2000, () => {
     console.log("Server started!");
